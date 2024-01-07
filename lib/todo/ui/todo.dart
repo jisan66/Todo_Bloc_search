@@ -68,101 +68,108 @@ class _TodoState extends State<Todo> {
             if (state is TodoLoadingState) {
               return Center(child: CircularProgressIndicator());
             } else if (state is TodoSuccessState) {
-              return ListView.builder(
-                itemBuilder: (context,
-                        index) => /* box.getAt(index)!.done == false
+              return state.box.length == 0
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ListView.builder(
+                      itemBuilder: (context,
+                              index) => /* box.getAt(index)!.done == false
                     ? */
-                    Card(
-                  child: ExpansionTile(
-                    // expandedAlignment: Alignment.centerLeft,
-                    // expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                          Card(
+                        child: ExpansionTile(
+                          // expandedAlignment: Alignment.centerLeft,
+                          // expandedCrossAxisAlignment: CrossAxisAlignment.start,
 
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                _showDialog(context,
-                                    index: index,
-                                    titile: state.box
-                                        .getAt(index)!
-                                        .titile
-                                        .toString(),
-                                    description: state.box
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      _showDialog(context,
+                                          index: index,
+                                          titile: state.box
+                                              .getAt(index)!
+                                              .titile
+                                              .toString(),
+                                          description: state.box
+                                              .getAt(index)!
+                                              .description
+                                              .toString(),
+                                          done: state.box.getAt(index)!.done);
+                                    },
+                                    icon: Icon(Icons.update)),
+                                IconButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                            content: Text(
+                                              'ARE YOU WANT TO DELETE THIS ?',
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            actionsAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            actions: [
+                                              Card(
+                                                child: MaterialButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text('NO'),
+                                                ),
+                                              ),
+                                              Card(
+                                                child: MaterialButton(
+                                                  onPressed: () {
+                                                    toDo.add(TodoRemoveEvent(
+                                                        index: index));
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text('YES'),
+                                                ),
+                                              ),
+                                            ]),
+                                      );
+                                    },
+                                    icon: Icon(
+                                      Icons.remove_moderator_outlined,
+                                      color: Colors.red,
+                                    )),
+                              ],
+                            )
+                          ],
+                          trailing: IconButton(
+                            onPressed: () {
+                              toDo.add(TodoUpdateEvent(
+                                index: index,
+                                todo: TodoModel(
+                                    titile: box.getAt(index)!.titile.toString(),
+                                    done: box.getAt(index)!.done == true
+                                        ? false
+                                        : true,
+                                    description: box
                                         .getAt(index)!
                                         .description
-                                        .toString(),
-                                    done: state.box.getAt(index)!.done);
-                              },
-                              icon: Icon(Icons.update)),
-                          IconButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                      content: Text(
-                                        'ARE YOU WANT TO DELETE THIS ?',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      actionsAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      actions: [
-                                        Card(
-                                          child: MaterialButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text('NO'),
-                                          ),
-                                        ),
-                                        Card(
-                                          child: MaterialButton(
-                                            onPressed: () {
-                                              toDo.add(TodoRemoveEvent(
-                                                  index: index));
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text('YES'),
-                                          ),
-                                        ),
-                                      ]),
-                                );
-                              },
-                              icon: Icon(
-                                Icons.remove_moderator_outlined,
-                                color: Colors.red,
-                              )),
-                        ],
-                      )
-                    ],
-                    trailing: IconButton(
-                      onPressed: () {
-                        toDo.add(TodoUpdateEvent(
-                          index: index,
-                          todo: TodoModel(
-                              titile: box.getAt(index)!.titile.toString(),
-                              done:
-                                  box.getAt(index)!.done == true ? false : true,
-                              description:
-                                  box.getAt(index)!.description.toString()),
-                        ));
-                      },
-                      icon: Icon(
-                        box.getAt(index)!.done == false
-                            ? Icons.check_box_outline_blank
-                            : Icons.check_box,
-                        color: Colors.red,
-                      ),
-                    ),
+                                        .toString()),
+                              ));
+                            },
+                            icon: Icon(
+                              box.getAt(index)!.done == false
+                                  ? Icons.check_box_outline_blank
+                                  : Icons.check_box,
+                              color: Colors.red,
+                            ),
+                          ),
 
-                    title: Text(state.box.getAt(index)!.titile),
-                    subtitle:
-                        Text(state.box.getAt(index)!.description.toString()),
-                  ),
-                ) /* : SizedBox() */,
-                itemCount: state.box.length,
-              );
+                          title: Text(state.box.getAt(index)!.titile),
+                          subtitle: Text(
+                              state.box.getAt(index)!.description.toString()),
+                        ),
+                      ) /* : SizedBox() */,
+                      itemCount: state.box.length,
+                    );
             }
             return SizedBox();
           },
