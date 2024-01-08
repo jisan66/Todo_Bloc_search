@@ -12,7 +12,7 @@ class SearchingBloc extends Bloc<SearchingEvent, SearchingState> {
     on<SearchingInitialEvent>((event, emit) async {
       emit(SearchingLoadingState());
 
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       emit(SearchingSuccessState(modelList: model));
     });
 
@@ -22,15 +22,8 @@ class SearchingBloc extends Bloc<SearchingEvent, SearchingState> {
               .toLowerCase()
               .contains(event.searchingKey.toLowerCase()))
           .toList();
-      List.generate(searchingList.length, (index) {
-        print(searchingList[index].name);
-      });
 
       emit(SearchingSuccessState(modelList: searchingList));
-    });
-
-    on<SearchingEmtyEvent>((event, emit) {
-      emit(SearchingSuccessState(modelList: model));
     });
   }
 }

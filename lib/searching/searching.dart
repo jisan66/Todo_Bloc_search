@@ -12,6 +12,7 @@ class Searching extends StatefulWidget {
 class _SearchingState extends State<Searching> {
   final bloc = SearchingBloc();
   TextEditingController _sarchingController = TextEditingController();
+
   @override
   void initState() {
     bloc.add(SearchingInitialEvent());
@@ -29,48 +30,33 @@ class _SearchingState extends State<Searching> {
               child: TextField(
                 controller: _sarchingController,
                 onChanged: (value) {
-                  // print(value.trim());
-                  if (value.trim().isNotEmpty) {
-                    bloc.add(SearchingKeyWordEvent(searchingKey: value.trim()));
-                  } else {
-                    bloc.add(SearchingEmtyEvent());
-                  }
+                  bloc.add(SearchingKeyWordEvent(searchingKey: value.trim()));
                 },
-                decoration: InputDecoration(border: OutlineInputBorder()),
+                decoration: const InputDecoration(border: OutlineInputBorder()),
               ),
             ),
-            BlocConsumer<SearchingBloc, SearchingState>(
+
+
+            BlocBuilder<SearchingBloc, SearchingState>(
               bloc: bloc,
-              listener: (context, state) {
-                // TODO: implement listener
-              },
               builder: (context, state) {
-                switch (state.runtimeType) {
-                  case SearchingLoadingState:
-                    return Center(
+                {
+                  if (state is SearchingLoadingState) {
+                    return const Center(
                       child: CircularProgressIndicator(),
                     );
-
-                  case SearchingSuccessState:
-                    state as SearchingSuccessState;
+                  } else if (state is SearchingSuccessState) {
                     return Expanded(
-                      child: _sarchingController.text.isEmpty
-                          ? ListView.builder(
-                              itemBuilder: (context, index) => ListTile(
-                                  title: Text(state.modelList[index].titile
-                                      .toString())),
-                              itemCount: state.modelList.length,
-                            )
-                          : ListView.builder(
-                              itemBuilder: (context, index) => ListTile(
-                                  title: Text(state.modelList[index].titile
-                                      .toString())),
-                              itemCount: state.modelList.length,
-                            ),
+                      child: ListView.builder(
+                        itemBuilder: (context, index) => ListTile(
+                            title:
+                                Text(state.modelList[index].titile.toString())),
+                        itemCount: state.modelList.length,
+                      ),
                     );
+                  }
 
-                  default:
-                    return SizedBox();
+                  return SizedBox();
                 }
               },
             ),
