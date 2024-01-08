@@ -12,7 +12,6 @@ class Searching extends StatefulWidget {
 class _SearchingState extends State<Searching> {
   final bloc = SearchingBloc();
   TextEditingController _sarchingController = TextEditingController();
-
   @override
   void initState() {
     bloc.add(SearchingInitialEvent());
@@ -30,33 +29,48 @@ class _SearchingState extends State<Searching> {
               child: TextField(
                 controller: _sarchingController,
                 onChanged: (value) {
-                  bloc.add(SearchingKeyWordEvent(searchingKey: value.trim()));
+                  // print(value.trim());
+                  if (value.trim().isNotEmpty) {
+                    bloc.add(SearchingKeyWordEvent(searchingKey: value.trim()));
+                  } else {
+                    bloc.add(SearchingEmtyEvent());
+                  }
                 },
-                decoration: const InputDecoration(border: OutlineInputBorder()),
+                decoration: InputDecoration(border: OutlineInputBorder()),
               ),
             ),
-
-
-            BlocBuilder<SearchingBloc, SearchingState>(
+            BlocConsumer<SearchingBloc, SearchingState>(
               bloc: bloc,
+              listener: (context, state) {
+                // TODO: implement listener
+              },
               builder: (context, state) {
-                {
-                  if (state is SearchingLoadingState) {
-                    return const Center(
+                switch (state.runtimeType) {
+                  case SearchingLoadingState:
+                    return Center(
                       child: CircularProgressIndicator(),
                     );
-                  } else if (state is SearchingSuccessState) {
-                    return Expanded(
-                      child: ListView.builder(
-                        itemBuilder: (context, index) => ListTile(
-                            title:
-                                Text(state.modelList[index].titile.toString())),
-                        itemCount: state.modelList.length,
-                      ),
-                    );
-                  }
 
-                  return SizedBox();
+                  case SearchingSuccessState:
+                    state as SearchingSuccessState;
+                    return Expanded(
+                      child: _sarchingController.text.isEmpty
+                          ? ListView.builder(
+                              itemBuilder: (context, index) => ListTile(
+                                  title: Text(state.modelList[index].titile
+                                      .toString())),
+                              itemCount: state.modelList.length,
+                            )
+                          : ListView.builder(
+                              itemBuilder: (context, index) => ListTile(
+                                  title: Text(state.modelList[index].titile
+                                      .toString())),
+                              itemCount: state.modelList.length,
+                            ),
+                    );
+
+                  default:
+                    return SizedBox();
                 }
               },
             ),
