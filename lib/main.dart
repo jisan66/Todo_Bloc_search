@@ -36,7 +36,42 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
         useMaterial3: false,
       ),
-      home: Searching(),
+      home: WorkingList(),
+    );
+  }
+}
+
+class WorkingList extends StatelessWidget {
+  const WorkingList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Card(
+              child: MaterialButton(
+                minWidth: double.infinity,
+                onPressed: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => Todo()));
+                },
+                child: Text('HIveDB'),
+              ),
+            ),
+            Card(
+              child: MaterialButton(
+                minWidth: double.infinity,
+                onPressed: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Searching())),
+                child: Text('Searching'),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
