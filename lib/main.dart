@@ -1,4 +1,5 @@
 // import 'package:demo_bloc/home/ui/home_screen.dart';
+import 'package:demo_bloc/searching/searching.dart';
 import 'package:demo_bloc/todo/models/todo_model.dart';
 import 'package:demo_bloc/todo/ui/todo.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
         useMaterial3: false,
       ),
-      home: Todo(),
+      home: Searching(),
     );
   }
 }
